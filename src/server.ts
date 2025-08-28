@@ -5,7 +5,7 @@ import { HttpError } from "./utils/errors";
 import * as store from "./store/itemsStore";
 import { CreateItemDTO, UpdateItemDTO } from "./models/item";
 
-const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
+const PORT = 4000;
 
 function notFound() {
   throw new HttpError(404, "NOT_FOUND", "Resource not found");
@@ -15,16 +15,16 @@ function methodNotAllowed(method: string) {
   throw new HttpError(405, "METHOD_NOT_ALLOWED", `${method} is not allowed for this endpoint`);
 }
 
-function isString(v: unknown): v is string {
-  return typeof v === "string" && v.trim().length > 0;
+function isString(input: unknown): input is string {
+  return typeof input === "string" && input.trim().length > 0;
 }
 
-function isNumber(v: unknown): v is number {
-  return typeof v === "number" && Number.isFinite(v);
+function isNumber(input: unknown): input is number {
+  return typeof input === "number" && Number.isFinite(input);
 }
 
-function isBoolean(v: unknown): v is boolean {
-  return typeof v === "boolean";
+function isBoolean(input: unknown): input is boolean {
+  return typeof input === "boolean";
 }
 
 function validateCreate(body: any): CreateItemDTO {
