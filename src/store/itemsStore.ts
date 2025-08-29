@@ -1,7 +1,7 @@
-import { randomUUID } from "crypto";
 import { CreateItem, Item, UpdateItem } from "../models/item";
 
 const items: Item[] = [];
+let nextId = 1;
 
 export function getAll(): Item[] {
   return items;
@@ -15,12 +15,10 @@ export function getById(id: string): Item | undefined {
 export function create(data: CreateItem): Item {
   const now = new Date().toISOString();
   const item: Item = {
-    id: randomUUID(),
+    id: String(nextId++),
     name: data.name.trim(),
     quantity: Math.floor(data.quantity),
     purchased: data.purchased ?? false,
-    createdAt: now,
-    updatedAt: now,
   };
   items.push(item);
   return item;
@@ -39,7 +37,6 @@ export function update(id: string, data: UpdateItem): Item | undefined {
       ? { quantity: Math.floor(data.quantity) }
       : {}),
     ...(data.purchased !== undefined ? { purchased: data.purchased } : {}),
-    updatedAt: new Date().toISOString(),
   };
 
   items[idx] = updated;

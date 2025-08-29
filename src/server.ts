@@ -126,14 +126,12 @@ function validateUpdate(body: unknown): UpdateItem {
   return data;
 }
 
-function extractId(pathname: string | null | undefined): string | null {
+function matchItemRoute(pathname: string | null | undefined): string | null {
   if (!pathname) return null;
-  const parts = pathname.split("/").filter(Boolean);
-  // expecting ["items", ":id"]
-  if (parts.length === 2 && parts[0] === "items") return parts[1];
-  return null;
+  // Matches "/items/<uuid or string>" optionally with trailing slash
+  const match = pathname.match(/^\/items\/([^/]+)\/?$/);
+  return match ? match[1] : null;
 }
-
 const server = http.createServer(
   async (req: IncomingMessage, res: ServerResponse) => {
     try {
@@ -149,7 +147,7 @@ const server = http.createServer(
           return sendJSON(res, 200, { success: true, data });
         }
         if (method === "POST") {
-          const body = await parseJSONBody<CreateItem>(req);
+          const body = await parseJSONBody(req);
           const data = validateCreate(body);
           const created = store.create(data);
           return sendJSON(res, 201, { success: true, data: created });
@@ -158,7 +156,7 @@ const server = http.createServer(
       }
 
       // /items/:id
-      const id = extractId(path);
+      const id = matchItemRoute(pathname);
       if (id) {
         if (method === "GET") {
           const item = store.getById(id);
@@ -166,7 +164,7 @@ const server = http.createServer(
           return sendJSON(res, 200, { success: true, data: item });
         }
         if (method === "PUT") {
-          const body = await parseJSONBody<UpdateItem>(req);
+          const body = await parseJSONBody(req);
           const data = validateUpdate(body);
           const updated = store.update(id, data);
           if (!updated) notFound();

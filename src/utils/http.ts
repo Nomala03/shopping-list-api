@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from "http";
-import { HttpError, ValidationErrorDetail } from "./errors";
+import { HttpError} from "./errors";
 
 //sending a JSON  response with proper headers.
 export function sendJSON<T>(

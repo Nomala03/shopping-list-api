@@ -3,8 +3,6 @@ export interface Item {
   name: string;
   quantity: number;
   purchased: boolean;
-  createdAt: string; // ISO string
-  updatedAt: string; // ISO string
 }
 
 export interface CreateItem {
