@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { CreateItemDTO, Item, UpdateItemDTO } from "../models/item";
+import { CreateItem, Item, UpdateItem } from "../models/item";
 
 const items: Item[] = [];
 
@@ -11,13 +11,14 @@ export function getById(id: string): Item | undefined {
   return items.find((i) => i.id === id);
 }
 
-export function create(dto: CreateItemDTO): Item {
+//create new item
+export function create(data: CreateItem): Item {
   const now = new Date().toISOString();
   const item: Item = {
     id: randomUUID(),
-    name: dto.name.trim(),
-    quantity: Math.floor(dto.quantity),
-    purchased: dto.purchased ?? false,
+    name: data.name.trim(),
+    quantity: Math.floor(data.quantity),
+    purchased: data.purchased ?? false,
     createdAt: now,
     updatedAt: now,
   };
@@ -25,16 +26,19 @@ export function create(dto: CreateItemDTO): Item {
   return item;
 }
 
-export function update(id: string, dto: UpdateItemDTO): Item | undefined {
+//update an existing item by id
+export function update(id: string, data: UpdateItem): Item | undefined {
   const idx = items.findIndex((i) => i.id === id);
   if (idx === -1) return undefined;
   const current = items[idx];
 
   const updated: Item = {
     ...current,
-    ...(dto.name !== undefined ? { name: dto.name.trim() } : {}),
-    ...(dto.quantity !== undefined ? { quantity: Math.floor(dto.quantity) } : {}),
-    ...(dto.purchased !== undefined ? { purchased: dto.purchased } : {}),
+    ...(data.name !== undefined ? { name: data.name.trim() } : {}),
+    ...(data.quantity !== undefined
+      ? { quantity: Math.floor(data.quantity) }
+      : {}),
+    ...(data.purchased !== undefined ? { purchased: data.purchased } : {}),
     updatedAt: new Date().toISOString(),
   };
 

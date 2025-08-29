@@ -7,13 +7,13 @@ export interface Item {
   updatedAt: string; // ISO string
 }
 
-export interface CreateItemDTO {
+export interface CreateItem {
   name: string;
   quantity: number;
   purchased?: boolean;
 }
 
-export interface UpdateItemDTO {
+export interface UpdateItem {
   name?: string;
   quantity?: number;
   purchased?: boolean;
